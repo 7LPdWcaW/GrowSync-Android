@@ -48,6 +48,12 @@ public class Main
 		{
 			@Override public void handle(HttpExchange httpExchange) throws IOException
 			{
+				if (!httpExchange.getRequestMethod().equalsIgnoreCase("post"))
+				{
+					respond(httpExchange, 400);
+					return;
+				}
+
 				FileOutputStream fileOutputStream = new FileOutputStream(new File(outPath, "plants.json"));
 				BufferedInputStream inputStream = new BufferedInputStream(httpExchange.getRequestBody(), 8192);
 				byte[] buffer = new byte[8192];
@@ -61,10 +67,7 @@ public class Main
 				fileOutputStream.flush();
 				fileOutputStream.close();
 
-				httpExchange.sendResponseHeaders(200, 0);
-				OutputStream os = httpExchange.getResponseBody();
-				os.write(0);
-				os.close();
+				respond(httpExchange, 200);
 			}
 		});
 
@@ -76,6 +79,12 @@ public class Main
 
 			@Override public void handle(HttpExchange httpExchange) throws IOException
 			{
+				if (!httpExchange.getRequestMethod().equalsIgnoreCase("post"))
+				{
+					respond(httpExchange, 400);
+					return;
+				}
+
 				// multipart/form-data, boundary=AaB03x
 				List<String> contentTypes = httpExchange.getRequestHeaders().get("Content-Type");
 				String contentType = null;
@@ -93,11 +102,7 @@ public class Main
 
 				if (boundaryStr.equalsIgnoreCase(""))
 				{
-					httpExchange.sendResponseHeaders(400, 0);
-					OutputStream os = httpExchange.getResponseBody();
-					os.write(0);
-					os.close();
-
+					respond(httpExchange, 400);
 					return;
 				}
 
@@ -185,10 +190,7 @@ public class Main
 					fileOutputStream.close();
 				}
 
-				httpExchange.sendResponseHeaders(200, 0);
-				OutputStream os = httpExchange.getResponseBody();
-				os.write(0);
-				os.close();
+				respond(httpExchange, 200);
 			}
 
 			private void readContentType(InputStream is, FileData file) throws IOException
@@ -279,5 +281,20 @@ public class Main
 
 		server.setExecutor(null);
 		server.start();
+	}
+
+	private static void respond(HttpExchange httpExchange, int errorCode)
+	{
+		try
+		{
+			httpExchange.sendResponseHeaders(errorCode, 0);
+			OutputStream os = httpExchange.getResponseBody();
+			os.write(0);
+			os.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
