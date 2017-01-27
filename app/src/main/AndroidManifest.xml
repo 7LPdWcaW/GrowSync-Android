@@ -6,6 +6,10 @@
 		android:allowBackup="true"
 		android:supportsRtl="true"
 	>
-
+		<receiver android:name=".SaveBroadcastReceiver" android:exported="true" android:enabled="true">
+			<intent-filter>
+				<action android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+			</intent-filter>
+		</receiver>
 	</application>
 </manifest>
