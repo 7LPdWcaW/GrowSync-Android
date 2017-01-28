@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+>
+	<PreferenceCategory
+		android:title="Permissions"
+		android:key="permission_container"
+	>
+		<Preference
+			android:key="permission"
+			android:title="Access to storage"
+			android:summary="This is required for the addon to work properly, please tap to enable"
+		/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="Server configuration"
+	>
+		<EditTextPreference
+			android:key="server_ip"
+			android:title="Server IP/Address"
+			android:summary="Enter the IP address of the server running the GrowSync server application"
+			android:hint="0.0.0.0"
+		/>
+
+		<EditTextPreference
+			android:key="server_port"
+			android:title="Server Port"
+			android:summary="Enter the port the GrowSync server application is running on"
+			android:hint="8420"
+		/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="Additional"
+	>
+		<CheckBoxPreference
+			android:key="send_encrypted"
+			android:title="Send data to server encrypted"
+			android:summary="Data will be sent to the server encrypted with a provided passkey."
+		/>
+
+		<EditTextPreference
+			android:key="encryption_key"
+			android:title="Encryption key"
+			android:summary="The server must have this set also using --encrypt-key to decrypt the files server-side"
+			android:password="true"
+			android:enabled="false"
+		/>
+
+		<CheckBoxPreference
+			android:key="wifi_only"
+			android:title="Only send when connected to wifi"
+		/>
+
+		<Preference
+			android:key="view_logs"
+			android:title="View logs"
+			android:summary="View all requests in a log"
+		/>
+	</PreferenceCategory>
+</PreferenceScreen>
