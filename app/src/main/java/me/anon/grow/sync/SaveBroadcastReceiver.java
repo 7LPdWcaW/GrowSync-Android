@@ -62,6 +62,8 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	 */
 	private void postImage(String path, boolean delete)
 	{
+		File filePath = new File(path);
+
 		if (!delete)
 		{
 			try
@@ -74,12 +76,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 				}
 				else
 				{
-					fileInputStream = new FileInputStream(new File(path));
+					fileInputStream = new FileInputStream(filePath);
 				}
 
 				RequestParams params = new RequestParams();
-				params.put("image", fileInputStream, new File(path).getName());
-				params.put("filename", new File(path).getParentFile().getName());
+				params.put("image", fileInputStream, filePath.getName());
+				params.put("filename", filePath.getParentFile().getName() + "/" + filePath.getName());
 
 				AsyncHttpClient client = new AsyncHttpClient();
 				client.post(serverIp + ":" + serverPort + "/image", params, new JsonHttpResponseHandler()
@@ -102,7 +104,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		}
 		else
 		{
-			String newPath = new File(path).getParentFile().getName() + "/" + new File(path).getName();
+			String newPath = filePath.getParentFile().getName() + "/" + filePath.getName();
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.delete(serverIp + ":" + serverPort + "/image?image=" + newPath, new JsonHttpResponseHandler()
 			{
