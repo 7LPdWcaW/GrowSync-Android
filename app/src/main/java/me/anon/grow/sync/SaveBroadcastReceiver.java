@@ -7,6 +7,19 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import cz.msebera.android.httpclient.Header;
 import me.anon.grow.helper.EncryptionHelper;
 
 import static android.util.Base64.NO_WRAP;
@@ -49,7 +62,61 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	 */
 	private void postImage(String path, boolean delete)
 	{
+		if (!delete)
+		{
+			try
+			{
+				InputStream fileInputStream = null;
 
+				if (shouldBeEncrypted)
+				{
+
+				}
+				else
+				{
+					fileInputStream = new FileInputStream(new File(path));
+				}
+
+				RequestParams params = new RequestParams();
+				params.put("image", fileInputStream, new File(path).getName());
+				params.put("filename", new File(path).getParentFile().getName());
+
+				AsyncHttpClient client = new AsyncHttpClient();
+				client.post(serverIp + ":" + serverPort + "/image", params, new JsonHttpResponseHandler()
+				{
+					@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+					{
+
+					}
+
+					@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+					{
+
+					}
+				});
+			}
+			catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			String newPath = new File(path).getParentFile().getName() + "/" + new File(path).getName();
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.delete(serverIp + ":" + serverPort + "/image?image=" + newPath, new JsonHttpResponseHandler()
+			{
+				@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+				{
+
+				}
+
+				@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+				{
+
+				}
+			});
+		}
 	}
 
 	/**
@@ -73,5 +140,10 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		encryptionKey = prefs.getString("encryption_key", "");
 		serverIp = prefs.getString("server_ip", "");
 		serverPort = prefs.getString("server_port", "");
+
+		if (!serverIp.startsWith("http"))
+		{
+			serverIp = "http://" + serverIp;
+		}
 	}
 }
