@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import cz.msebera.android.httpclient.Header;
 import me.anon.grow.helper.EncryptionHelper;
+import me.anon.grow.stream.EncryptInputStream;
 
 import static android.util.Base64.NO_WRAP;
 
@@ -68,15 +69,11 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		{
 			try
 			{
-				InputStream fileInputStream = null;
+				InputStream fileInputStream = new FileInputStream(filePath);;
 
 				if (shouldBeEncrypted)
 				{
-
-				}
-				else
-				{
-					fileInputStream = new FileInputStream(filePath);
+					fileInputStream = new EncryptInputStream(encryptionKey, fileInputStream);
 				}
 
 				RequestParams params = new RequestParams();
