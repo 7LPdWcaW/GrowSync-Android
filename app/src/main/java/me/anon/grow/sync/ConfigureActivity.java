@@ -1,5 +1,6 @@
 package me.anon.grow.sync;
 
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -7,6 +8,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 
 import me.anon.helper.PermissionHelper;
 
@@ -57,6 +59,19 @@ public class ConfigureActivity extends AppCompatActivity
 					}
 				});
 			}
+
+			findPreference("view_logs").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+			{
+				@Override public boolean onPreferenceClick(Preference preference)
+				{
+					new AlertDialog.Builder(getActivity())
+						.setTitle("Logs")
+						.setMessage(Html.fromHtml(getPreferenceManager().getSharedPreferences().getString("log", "")))
+						.show();
+
+					return true;
+				}
+			});
 
 			((CheckBoxPreference)findPreference("send_encrypted")).setOnPreferenceChangeListener(this);
 			findPreference("encryption_key").setEnabled(((CheckBoxPreference)findPreference("send_encrypted")).isChecked());

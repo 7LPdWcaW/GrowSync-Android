@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.ByteArrayEntity;
@@ -31,12 +32,14 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	private String encryptionKey = "";
 	private String serverIp = "";
 	private String serverPort = "";
+	private Context context;
 
 	@Override public void onReceive(Context context, Intent intent)
 	{
 		if (intent.getExtras() == null) return;
 
-		populateSettings(context);
+		this.context = context.getApplicationContext();
+		populateSettings();
 
 		if (intent.getExtras().containsKey("me.anon.grow.PLANT_LIST"))
 		{
@@ -54,12 +57,19 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		}
 	}
 
+	private void log(String event)
+	{
+		event = "[" + new Date().toLocaleString() + "] " + event;
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		prefs.edit().putString("log", prefs.getString("log", "") + "<br />" + event).apply();
+	}
+
 	/**
 	 * Posts image to the API
 	 * @param path The path of the image to send
 	 * @param delete To delete or not
 	 */
-	private void postImage(String path, boolean delete)
+	private void postImage(final String path, boolean delete)
 	{
 		File filePath = new File(path);
 
@@ -74,6 +84,8 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 					fileInputStream = new EncryptInputStream(encryptionKey, fileInputStream);
 				}
 
+				log("Sending image <em>" + path + "</em>");
+
 				RequestParams params = new RequestParams();
 				params.put("image", fileInputStream, filePath.getName());
 				params.put("filename", filePath.getParentFile().getName() + "/" + filePath.getName());
@@ -83,12 +95,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 				{
 					@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 					{
-
+						log("Image <em>" + path + "<em> sent successfully");
 					}
 
 					@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
 					{
-
+						log("Image <em>" + path + "<em> failed to send, server responded " + statusCode);
 					}
 				});
 			}
@@ -99,18 +111,20 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		}
 		else
 		{
+			log("Sending delete request for image <em>" + path + "</em>");
+
 			String newPath = filePath.getParentFile().getName() + "/" + filePath.getName();
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.delete(serverIp + ":" + serverPort + "/image?image=" + newPath, new JsonHttpResponseHandler()
 			{
 				@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 				{
-
+					log("Image <em>" + path + "<em> delete request sent successfully");
 				}
 
 				@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
 				{
-
+					log("Image <em>" + path + "<em> failed to delete, server responded " + statusCode);
 				}
 			});
 		}
@@ -122,6 +136,8 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	 */
 	private void postPlantData(byte[] data)
 	{
+		log("Sending plant data");
+
 		ByteArrayEntity stringEntity = new ByteArrayEntity(data);
 
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -129,21 +145,20 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		{
 			@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 			{
-
+				log("Plant data successfully sent");
 			}
 
 			@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
 			{
-
+				log("Plant data failed to send, server responded " + statusCode);
 			}
 		});
 	}
 
 	/**
 	 * Populates local setting variables for convenience
-	 * @param context
 	 */
-	private void populateSettings(Context context)
+	private void populateSettings()
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		shouldBeEncrypted = prefs.getBoolean("send_encrypted", false);

@@ -53,5 +53,11 @@
 			android:key="wifi_only"
 			android:title="Only send when connected to wifi"
 		/>
+
+		<Preference
+			android:key="view_logs"
+			android:title="View logs"
+			android:summary="View all requests in a log"
+		/>
 	</PreferenceCategory>
 </PreferenceScreen>
