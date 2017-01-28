@@ -61,7 +61,8 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	{
 		event = "[" + new Date().toLocaleString() + "] " + event;
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		prefs.edit().putString("log", prefs.getString("log", "") + "<br />" + event).apply();
+		String current = prefs.getString("log", "");
+		prefs.edit().putString("log", current.substring(Math.max(current.length() - 1000, 0), Math.min(current.length(), 1000)) + "<br />" + event).apply();
 	}
 
 	/**
