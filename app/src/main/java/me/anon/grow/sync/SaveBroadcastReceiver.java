@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-/**
- * // TODO: Add class description
- */
 public class SaveBroadcastReceiver extends BroadcastReceiver
 {
 	@Override public void onReceive(Context context, Intent intent)

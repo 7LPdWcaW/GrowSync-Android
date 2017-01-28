@@ -1,10 +1,11 @@
 package me.anon.grow.sync;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 /**
  * // TODO: Add class description
@@ -16,7 +17,6 @@ public class ConfigureActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.toolbar_activity);
-		setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 		setTitle("GrowSync configuration");
 
 		if (savedInstanceState == null)
@@ -27,13 +27,25 @@ public class ConfigureActivity extends AppCompatActivity
 		}
 	}
 
-	public static class ConfigureFragment extends PreferenceFragment
+	public static class ConfigureFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener
 	{
 		@Override public void onCreate(Bundle savedInstanceState)
 		{
 			super.onCreate(savedInstanceState);
 
 			addPreferencesFromResource(R.xml.preferences);
+
+			((CheckBoxPreference)findPreference("send_encrypted")).setOnPreferenceChangeListener(this);
+		}
+
+		@Override public boolean onPreferenceChange(Preference preference, Object value)
+		{
+			if (preference.getKey().equalsIgnoreCase("send_encrypted"))
+			{
+				findPreference("encryption_key").setEnabled((Boolean)value);
+			}
+
+			return false;
 		}
 	}
 }
