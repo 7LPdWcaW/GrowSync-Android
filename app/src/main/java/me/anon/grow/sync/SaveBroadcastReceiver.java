@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -20,10 +19,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
 import me.anon.grow.helper.EncryptionHelper;
 import me.anon.grow.stream.EncryptInputStream;
-
-import static android.util.Base64.NO_WRAP;
 
 public class SaveBroadcastReceiver extends BroadcastReceiver
 {
@@ -43,8 +41,8 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		if (intent.getExtras().containsKey("me.anon.grow.PLANT_LIST"))
 		{
 			String plantData = intent.getExtras().getString("me.anon.grow.PLANT_LIST", "");
-			plantData = shouldBeEncrypted ? Base64.encodeToString(EncryptionHelper.encrypt(encryptionKey, plantData), NO_WRAP) : plantData;
-			postPlantData(plantData);
+			byte[] sendData = shouldBeEncrypted ? EncryptionHelper.encrypt(encryptionKey, plantData) : plantData.getBytes();
+			postPlantData(sendData);
 		}
 		else if (intent.getExtras().containsKey("me.anon.grow.IMAGE_ADDED"))
 		{
@@ -122,9 +120,23 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	 * Posts data to the API for `/plants` endpoint
 	 * @param data
 	 */
-	private void postPlantData(String data)
+	private void postPlantData(byte[] data)
 	{
+		ByteArrayEntity stringEntity = new ByteArrayEntity(data);
 
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(null, serverIp + ":" + serverPort + "/plants", stringEntity, "application/octet-stream", new JsonHttpResponseHandler()
+		{
+			@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+			{
+
+			}
+
+			@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+			{
+
+			}
+		});
 	}
 
 	/**
