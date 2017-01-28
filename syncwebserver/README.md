@@ -6,13 +6,17 @@ To run the server, execute the jar file using
 
 *windows*
 
-``
+In CMD, type
+
+`java -jar SyncWebServer.jar`
 
 *linux/osx*
 
-``
+In your CLI, type
 
-Run in background by calling ``
+`java -jar SyncWebServer.jar`
+
+Run in background by calling `java -jar SyncWebServer.jar > /dev/null 2>&1 &`
 
 ##Server options
 
