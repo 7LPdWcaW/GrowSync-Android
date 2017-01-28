@@ -39,6 +39,12 @@ Send an image to be stored with the following post body
 |`image`|Image data to be uploaded|
 |`filename`|Path to store image relative to specified `--path`|
 
+###/image/ `delete`
+
+Delete an image from the given path
+
+Requires query param `image` with the path to the image relative to specified `--path`
+
 ###Response
 
 You will receive a `{"success": true|false}` response with either a `400` or `200` response code
