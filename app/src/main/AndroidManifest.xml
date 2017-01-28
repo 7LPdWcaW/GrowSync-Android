@@ -5,11 +5,22 @@
 	<application
 		android:allowBackup="true"
 		android:supportsRtl="true"
+		android:icon="@mipmap/ic_launcher"
 	>
 		<receiver android:name=".SaveBroadcastReceiver" android:exported="true" android:enabled="true">
 			<intent-filter>
 				<action android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
 			</intent-filter>
 		</receiver>
+
+		<activity android:name=".ConfigureActivity" android:theme="@style/AppTheme">
+			<intent-filter>
+				<action android:name="me.anon.grow.ADDON_CONFIGURATION" />
+				<category android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+			</intent-filter>
+		</activity>
+
+		<meta-data android:name="me.anon.grow.ADDON_NAME" android:value="Auto sync" />
+		<meta-data android:name="me.anon.grow.ADDON_VERSION" android:value="v1.0" />
 	</application>
 </manifest>
