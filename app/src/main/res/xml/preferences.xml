@@ -4,6 +4,17 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 >
 	<PreferenceCategory
+		android:title="Permissions"
+		android:key="permission_container"
+	>
+		<Preference
+			android:key="permission"
+			android:title="Access to storage"
+			android:summary="This is required for the addon to work properly, please tap to enable"
+		/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="Server configuration"
 	>
 		<EditTextPreference

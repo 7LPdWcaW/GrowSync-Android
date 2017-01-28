@@ -1,11 +1,16 @@
 package me.anon.grow.sync;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+
+import me.anon.grow.helper.PermissionHelper;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
  * // TODO: Add class description
@@ -29,11 +34,29 @@ public class ConfigureActivity extends AppCompatActivity
 
 	public static class ConfigureFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener
 	{
+		private static final int REQUEST_STORAGE_PERMISSION = 0x1;
+
 		@Override public void onCreate(Bundle savedInstanceState)
 		{
 			super.onCreate(savedInstanceState);
 
 			addPreferencesFromResource(R.xml.preferences);
+
+			if (PermissionHelper.hasPermission(getActivity(), READ_EXTERNAL_STORAGE))
+			{
+				getPreferenceScreen().removePreference(findPreference("permission_container"));
+			}
+			else
+			{
+				findPreference("permission").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+				{
+					@Override public boolean onPreferenceClick(Preference preference)
+					{
+						PermissionHelper.doPermissionCheck(ConfigureFragment.this, READ_EXTERNAL_STORAGE, REQUEST_STORAGE_PERMISSION, "Storage permission is required to read files saved by the app");
+						return true;
+					}
+				});
+			}
 
 			((CheckBoxPreference)findPreference("send_encrypted")).setOnPreferenceChangeListener(this);
 		}
@@ -46,6 +69,16 @@ public class ConfigureActivity extends AppCompatActivity
 			}
 
 			return false;
+		}
+
+		@Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+		{
+			super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+			if (requestCode == REQUEST_STORAGE_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
+				getPreferenceScreen().removePreference(findPreference("permission_container"));
+			}
 		}
 	}
 }
