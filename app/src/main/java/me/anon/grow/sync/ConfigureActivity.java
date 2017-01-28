@@ -59,12 +59,14 @@ public class ConfigureActivity extends AppCompatActivity
 			}
 
 			((CheckBoxPreference)findPreference("send_encrypted")).setOnPreferenceChangeListener(this);
+			findPreference("encryption_key").setEnabled(((CheckBoxPreference)findPreference("send_encrypted")).isChecked());
 		}
 
 		@Override public boolean onPreferenceChange(Preference preference, Object value)
 		{
 			if (preference.getKey().equalsIgnoreCase("send_encrypted"))
 			{
+				((CheckBoxPreference)preference).setChecked((Boolean)value);
 				findPreference("encryption_key").setEnabled((Boolean)value);
 			}
 
