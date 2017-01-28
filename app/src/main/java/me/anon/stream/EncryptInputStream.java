@@ -1,4 +1,4 @@
-package me.anon.grow.stream;
+package me.anon.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-import me.anon.grow.helper.EncryptionHelper;
+import me.anon.helper.EncryptionHelper;
 
 /**
  * Creates a wrapper for input stream to encrypt the incoming bytes. Data is encrypted as it is read from its source

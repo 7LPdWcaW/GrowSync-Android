@@ -1,4 +1,4 @@
-package me.anon.grow.helper;
+package me.anon.helper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

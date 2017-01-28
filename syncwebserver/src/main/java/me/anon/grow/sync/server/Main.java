@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.anon.lib.stream.DecryptOutputStream;
+
 public class Main
 {
 	private static String outPath = "./sync/";
+	private static String encryptKey = null;
 	private static int port = 8420;
 	private static boolean verbose = false;
 
@@ -32,17 +35,21 @@ public class Main
 		{
 			for (int index = 0; index < args.length; index++)
 			{
-				if ("-p".equalsIgnoreCase(args[index]) || "--path".equalsIgnoreCase(args[index]))
+				if (args[index].startsWith("-p") || args[index].startsWith("--path"))
 				{
-					outPath = args[index + 1];
+					outPath = args[index].split("=")[1];
 				}
-				else if ("--port".equalsIgnoreCase(args[index]))
+				else if (args[index].startsWith("--port"))
 				{
-					port = Integer.parseInt(args[index + 1]);
+					port = Integer.parseInt(args[index].split("=")[1]);
 				}
 				else if ("-v".equalsIgnoreCase(args[index]) || "--verbose".equalsIgnoreCase(args[index]))
 				{
 					verbose = true;
+				}
+				if (args[index].startsWith("--encrypt-key"))
+				{
+					encryptKey = args[index].split("=")[1];
 				}
 			}
 		}
@@ -64,7 +71,13 @@ public class Main
 					return;
 				}
 
-				FileOutputStream fileOutputStream = new FileOutputStream(new File(outPath, "plants.json"));
+				OutputStream fileOutputStream = new FileOutputStream(new File(outPath, "plants.json"));
+
+				if (encryptKey != null)
+				{
+					fileOutputStream = new DecryptOutputStream(encryptKey, fileOutputStream);
+				}
+
 				BufferedInputStream inputStream = new BufferedInputStream(httpExchange.getRequestBody(), 8192);
 				byte[] buffer = new byte[8192];
 				int read = -1;
@@ -195,7 +208,12 @@ public class Main
 						File file = new File(outPath, new String(pathInfo.data, "utf-8"));
 						new File(file.getParent()).mkdirs();
 
-						FileOutputStream fileOutputStream = new FileOutputStream(file);
+						OutputStream fileOutputStream = new FileOutputStream(file);
+
+						if (encryptKey != null)
+						{
+							fileOutputStream = new DecryptOutputStream(encryptKey, fileOutputStream);
+						}
 
 						log("Writing file to: " + file.getAbsolutePath());
 

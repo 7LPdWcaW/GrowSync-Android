@@ -20,8 +20,8 @@ import java.io.InputStream;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.ByteArrayEntity;
-import me.anon.grow.helper.EncryptionHelper;
-import me.anon.grow.stream.EncryptInputStream;
+import me.anon.helper.EncryptionHelper;
+import me.anon.stream.EncryptInputStream;
 
 public class SaveBroadcastReceiver extends BroadcastReceiver
 {

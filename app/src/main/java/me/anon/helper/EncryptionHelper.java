@@ -1,4 +1,4 @@
-package me.anon.grow.helper;
+package me.anon.helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

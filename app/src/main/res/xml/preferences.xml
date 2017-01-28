@@ -38,13 +38,13 @@
 		<CheckBoxPreference
 			android:key="send_encrypted"
 			android:title="Send data to server encrypted"
-			android:summary="Data will be sent to the server encrypted with a provided passkey"
+			android:summary="Data will be sent to the server encrypted with a provided passkey."
 		/>
 
 		<EditTextPreference
 			android:key="encryption_key"
 			android:title="Encryption key"
-			android:summary="The server must have this set also using --encrypt-key"
+			android:summary="The server must have this set also using --encrypt-key to decrypt the files server-side"
 			android:password="true"
 			android:enabled="false"
 		/>

@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import me.anon.grow.helper.PermissionHelper;
+import me.anon.helper.PermissionHelper;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 

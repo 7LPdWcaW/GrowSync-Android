@@ -21,6 +21,7 @@ Run in background by calling ``
 |`-v`/`--verbose`|Sets logging to be enabled|
 |`-p`/`--path <path>`|Sets the output path for uploaded files|
 |`--port <port>`|Sets the port of the server to run on|
+|`--encrypt-key <key>`|Sets the key to use to decrypt incoming files. Leave this blank to keep files encrypted|
 
 ##Endpoints
 
