@@ -7,7 +7,8 @@ The addon works by sending data from the Grow Tracker app to an API running at t
 # Latest releases
 
 [GrowSync for Android: (MD5) b6cec4588fee00bca2964f970aef2f40 v1.0-alpha](/app/app-release.apk)
-[GrowSync web server: (MD5) 9d15765cf7aa0ddb99fe05ba4a4d59ef v1.0-alpha](/syncwebserver/SyncWebServer.jar)
+
+[GrowSync web server: (MD5) f809dced8c945f821c71347cade23acf v1.0-alpha](/syncwebserver/SyncWebServer.jar)
 
 # Installation
 
