@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -39,6 +41,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 
 		this.context = context.getApplicationContext();
 		populateSettings();
+
+		if (wifiOnly && !isConnectedToWifi())
+		{
+			log("Not handing event, wifi is not connected");
+			return;
+		}
 
 		if (intent.getExtras().containsKey("me.anon.grow.PLANT_LIST"))
 		{
@@ -181,5 +189,17 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		{
 			serverIp = "http://" + serverIp;
 		}
+	}
+
+	/**
+	 * Checks if wifi is connected
+	 * @return
+	 */
+	public boolean isConnectedToWifi()
+	{
+		ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		return netInfo != null && netInfo.isConnectedOrConnecting();
 	}
 }
