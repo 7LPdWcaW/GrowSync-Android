@@ -10,7 +10,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -59,10 +58,10 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 
 	private void log(String event)
 	{
-		event = "[" + new Date().toLocaleString() + "] " + event;
+		event = "<b>[" + new Date().toLocaleString() + "]</b>" + "<br />" + event;
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		String current = prefs.getString("log", "");
-		prefs.edit().putString("log", current.substring(Math.max(current.length() - 1000, 0), Math.min(current.length(), 1000)) + "<br />" + event).apply();
+		prefs.edit().putString("log", current.substring(Math.max(current.length() - 10000, 0), current.length()) + "<br />" + event).apply();
 	}
 
 	/**
@@ -99,9 +98,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 						log("Image <em>" + path + "<em> sent successfully");
 					}
 
-					@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+					@Override public void onFinish()
 					{
-						log("Image <em>" + path + "<em> failed to send, server responded " + statusCode);
+						if (getResultCode() != 200)
+						{
+							log("Image <em>" + path + "<em> failed to send, server responded " + getResultCode());
+						}
 					}
 				});
 			}
@@ -123,9 +125,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 					log("Image <em>" + path + "<em> delete request sent successfully");
 				}
 
-				@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+				@Override public void onFinish()
 				{
-					log("Image <em>" + path + "<em> failed to delete, server responded " + statusCode);
+					if (getResultCode() != 200)
+					{
+						log("Image <em>" + path + "<em> failed to delete, server responded " + getResultCode());
+					}
 				}
 			});
 		}
@@ -142,6 +147,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		ByteArrayEntity stringEntity = new ByteArrayEntity(data);
 
 		AsyncHttpClient client = new AsyncHttpClient();
+		client.setTimeout(5);
 		client.post(null, serverIp + ":" + serverPort + "/plants", stringEntity, "application/octet-stream", new JsonHttpResponseHandler()
 		{
 			@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
@@ -149,9 +155,12 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 				log("Plant data successfully sent");
 			}
 
-			@Override public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse)
+			@Override public void onFinish()
 			{
-				log("Plant data failed to send, server responded " + statusCode);
+				if (getResultCode() != 200)
+				{
+					log("Plant data failed to send, server responded " + getResultCode());
+				}
 			}
 		});
 	}
