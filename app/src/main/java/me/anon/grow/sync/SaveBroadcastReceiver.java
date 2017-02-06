@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
 
@@ -44,7 +44,13 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 
 		if (wifiOnly && !isConnectedToWifi())
 		{
-			log("Not handing event, wifi is not connected");
+			log("Not handing event, wifi is not connected.");
+			return;
+		}
+
+		if (TextUtils.isEmpty(serverIp) || serverIp.equalsIgnoreCase("http://"))
+		{
+			log("Not handling event, no server IP configured.");
 			return;
 		}
 
@@ -99,7 +105,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 				params.put("filename", filePath.getParentFile().getName() + "/" + filePath.getName());
 
 				AsyncHttpClient client = new AsyncHttpClient();
-				client.post(serverIp + ":" + serverPort + "/image", params, new JsonHttpResponseHandler()
+				client.post(serverIp + (!TextUtils.isEmpty(serverPort) ? (":" + serverPort) : "") + "/image", params, new JsonHttpResponseHandler()
 				{
 					@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 					{
@@ -115,9 +121,10 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 					}
 				});
 			}
-			catch (FileNotFoundException e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
+				log("Could not handle new image event: " + e.getMessage());
 			}
 		}
 		else
@@ -126,7 +133,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 
 			String newPath = filePath.getParentFile().getName() + "/" + filePath.getName();
 			AsyncHttpClient client = new AsyncHttpClient();
-			client.delete(serverIp + ":" + serverPort + "/image?image=" + newPath, new JsonHttpResponseHandler()
+			client.delete(serverIp + (!TextUtils.isEmpty(serverPort) ? (":" + serverPort) : "") + "/image?image=" + newPath, new JsonHttpResponseHandler()
 			{
 				@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 				{
@@ -156,7 +163,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setTimeout(5);
-		client.post(null, serverIp + ":" + serverPort + "/plants", stringEntity, "application/octet-stream", new JsonHttpResponseHandler()
+		client.post(null, serverIp + (!TextUtils.isEmpty(serverPort) ? (":" + serverPort) : "") + "/plants", stringEntity, "application/octet-stream", new JsonHttpResponseHandler()
 		{
 			@Override public void onSuccess(int statusCode, Header[] headers, JSONObject response)
 			{
