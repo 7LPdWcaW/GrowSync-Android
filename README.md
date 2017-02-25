@@ -6,9 +6,9 @@ The addon works by sending data from the Grow Tracker app to an API running at t
 
 # Latest releases
 
-[GrowSync for Android: (MD5) b6cec4588fee00bca2964f970aef2f40 v1.0-alpha](/app/app-release.apk)
+[GrowSync for Android: (MD5) c3d7588b4d6403de36cafd0195bcc37f v1.0](/app/app-release.apk)
 
-[GrowSync web server: (MD5) f809dced8c945f821c71347cade23acf v1.0-alpha](/syncwebserver/SyncWebServer.jar)
+[GrowSync web server: (MD5) f20cd77617987ad48d84233899e1fa33 v1.0](/syncwebserver/SyncWebServer.jar)
 
 # Installation
 
@@ -17,7 +17,7 @@ Install the APK. You must have Grow Tracker version 2.2 or above, inside the Gro
 ## How to install
 
 1. Follow [this guide](https://gameolith.uservoice.com/knowledgebase/articles/76902-android-4-0-tablets-allowing-app-installs-from) to enable unknown sources
-2. Download the APK from [here](https://github.com/7LPdWcaW/GrowTracker-Android/raw/master/app/app-release.apk)
+2. Download the APK from [here](https://github.com/7LPdWcaW/GrowSync-Android/releases)
 3. Click on downloaded app and install
 
 #Encryption
@@ -30,7 +30,7 @@ You can decrypt your files using your passphrase either by writing a script that
 
 #License
 
-Copyright 2014-2016 7LPdWcaW
+Copyright 2014-2017 7LPdWcaW
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
