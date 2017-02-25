@@ -36,6 +36,14 @@
 		android:title="Additional"
 	>
 		<CheckBoxPreference
+			android:key="send_images"
+			android:title="Send images to server"
+			android:summary="Images taken in the app will be uploaded to the server"
+			android:checked="true"
+			android:defaultValue="true"
+		/>
+
+		<CheckBoxPreference
 			android:key="send_encrypted"
 			android:title="Send data to server encrypted"
 			android:summary="Data will be sent to the server encrypted with a provided passkey."
