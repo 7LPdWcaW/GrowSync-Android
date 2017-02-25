@@ -20,8 +20,8 @@
 
 		<activity android:name=".ConfigureActivity" android:theme="@style/AppTheme">
 			<intent-filter>
-				<action android:name="me.anon.grow.ADDON_CONFIGURATION" />
-				<category android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+				<action android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+				<category android:name="me.anon.grow.ADDON_CONFIGURATION" />
 			</intent-filter>
 		</activity>
 
