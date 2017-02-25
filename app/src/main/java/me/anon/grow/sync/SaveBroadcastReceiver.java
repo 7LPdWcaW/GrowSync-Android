@@ -30,6 +30,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 	private boolean isEncrypted = false;
 	private boolean shouldBeEncrypted = false;
 	private boolean wifiOnly = false;
+	private boolean sendImages = true;
 	private String encryptionKey = "";
 	private String serverIp = "";
 	private String serverPort = "";
@@ -60,13 +61,17 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 			byte[] sendData = shouldBeEncrypted ? EncryptionHelper.encrypt(encryptionKey, plantData) : plantData.getBytes();
 			postPlantData(sendData);
 		}
-		else if (intent.getExtras().containsKey("me.anon.grow.IMAGE_ADDED"))
+
+		if (sendImages)
 		{
-			postImage(intent.getExtras().getString("me.anon.grow.IMAGE_ADDED"), false);
-		}
-		else if (intent.getExtras().containsKey("me.anon.grow.IMAGE_DELETED"))
-		{
-			postImage(intent.getExtras().getString("me.anon.grow.IMAGE_DELETED"), true);
+			if (intent.getExtras().containsKey("me.anon.grow.IMAGE_ADDED"))
+			{
+				postImage(intent.getExtras().getString("me.anon.grow.IMAGE_ADDED"), false);
+			}
+			else if (intent.getExtras().containsKey("me.anon.grow.IMAGE_DELETED"))
+			{
+				postImage(intent.getExtras().getString("me.anon.grow.IMAGE_DELETED"), true);
+			}
 		}
 	}
 
@@ -191,6 +196,7 @@ public class SaveBroadcastReceiver extends BroadcastReceiver
 		encryptionKey = prefs.getString("encryption_key", "");
 		serverIp = prefs.getString("server_ip", "");
 		serverPort = prefs.getString("server_port", "");
+		sendImages = prefs.getBoolean("send_images", true);
 
 		if (!serverIp.startsWith("http"))
 		{
