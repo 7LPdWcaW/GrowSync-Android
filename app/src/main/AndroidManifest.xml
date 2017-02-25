@@ -1,0 +1,31 @@
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="me.anon.grow.sync"
+>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+	<application
+		android:allowBackup="true"
+		android:supportsRtl="true"
+		android:icon="@mipmap/ic_launcher"
+	>
+		<receiver android:name=".SaveBroadcastReceiver" android:exported="true" android:enabled="true">
+			<intent-filter>
+				<action android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+			</intent-filter>
+		</receiver>
+
+		<activity android:name=".ConfigureActivity" android:theme="@style/AppTheme">
+			<intent-filter>
+				<action android:name="me.anon.grow.ACTION_SAVE_PLANTS" />
+				<category android:name="me.anon.grow.ADDON_CONFIGURATION" />
+			</intent-filter>
+		</activity>
+
+		<meta-data android:name="me.anon.grow.ADDON_NAME" android:value="Auto sync" />
+		<meta-data android:name="me.anon.grow.ADDON_VERSION" android:value="v1.0" />
+	</application>
+</manifest>
