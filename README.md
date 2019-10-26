@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This app is deprecated as of Grow Tracker 2.6 as android IPC limit prevents large data from being trasferred over Intents, effectively breaking this functionality. Until a work around is created, this app will be deprecated.
+
 # Read me
 
 Welcome to grow sync. This is an application addon for the [Grow Tracker](https://github.com/7LPdWcaW/GrowTracker-Android).
